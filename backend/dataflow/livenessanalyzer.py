@@ -1,6 +1,5 @@
 from backend.dataflow.basicblock import BasicBlock
 from backend.dataflow.cfg import CFG
-from utils.tac.temp import Temp
 
 """
 LivenessAnalyzer: do the liveness analysis according to the CFG

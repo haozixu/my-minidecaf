@@ -4,11 +4,10 @@ from frontend.ast.tree import *
 from frontend.ast.visitor import Visitor
 from frontend.symbol.varsymbol import VarSymbol
 from frontend.type.array import ArrayType
-from utils.tac import tacop
+from utils.tac import tacinstr
 from utils.tac.funcvisitor import FuncVisitor
 from utils.tac.programwriter import ProgramWriter
 from utils.tac.tacprog import TACProg
-from utils.tac.temp import Temp
 
 """
 The TAC generation phase: translate the abstract syntax tree into three-address code.
@@ -72,7 +71,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         if stmt.otherwise is NULL:
             skipLabel = mv.freshLabel()
             mv.visitCondBranch(
-                tacop.CondBranchOp.BEQ, stmt.cond.getattr("val"), skipLabel
+                tacinstr.CondBranchOp.BEQ, stmt.cond.getattr("val"), skipLabel
             )
             stmt.then.accept(self, mv)
             mv.visitLabel(skipLabel)
@@ -80,7 +79,7 @@ class TACGen(Visitor[FuncVisitor, None]):
             skipLabel = mv.freshLabel()
             exitLabel = mv.freshLabel()
             mv.visitCondBranch(
-                tacop.CondBranchOp.BEQ, stmt.cond.getattr("val"), skipLabel
+                tacinstr.CondBranchOp.BEQ, stmt.cond.getattr("val"), skipLabel
             )
             stmt.then.accept(self, mv)
             mv.visitBranch(exitLabel)
@@ -96,7 +95,9 @@ class TACGen(Visitor[FuncVisitor, None]):
 
         mv.visitLabel(beginLabel)
         stmt.cond.accept(self, mv)
-        mv.visitCondBranch(tacop.CondBranchOp.BEQ, stmt.cond.getattr("val"), breakLabel)
+        mv.visitCondBranch(
+            tacinstr.CondBranchOp.BEQ, stmt.cond.getattr("val"), breakLabel
+        )
 
         stmt.body.accept(self, mv)
         mv.visitLabel(loopLabel)
@@ -108,7 +109,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         expr.operand.accept(self, mv)
 
         op = {
-            node.UnaryOp.Neg: tacop.UnaryOp.NEG,
+            node.UnaryOp.Neg: tacinstr.UnaryOp.NEG,
             # You can add unary operations here.
         }[expr.op]
         expr.setattr("val", mv.visitUnary(op, expr.operand.getattr("val")))
@@ -118,7 +119,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         expr.rhs.accept(self, mv)
 
         op = {
-            node.BinaryOp.Add: tacop.BinaryOp.ADD,
+            node.BinaryOp.Add: tacinstr.BinaryOp.ADD,
             # You can add binary operations here.
         }[expr.op]
         expr.setattr(

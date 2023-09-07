@@ -3,10 +3,8 @@ from typing import Final, Optional
 from utils.label.funclabel import FuncLabel
 from utils.label.label import Label, LabelKind
 from utils.tac.nativeinstr import NativeInstr
-from utils.tac.reg import Reg
-from utils.tac.tacinstr import TACInstr
-from utils.tac.tacop import BinaryOp, InstrKind, UnaryOp
-from utils.tac.temp import Temp
+from utils.tac.tacinstr import TACInstr, BinaryOp, InstrKind, UnaryOp
+from utils.tac.reg import Temp, Reg
 
 WORD_SIZE: Final[int] = 4  # in bytes
 MAX_INT: Final[int] = 0x7FFF_FFFF

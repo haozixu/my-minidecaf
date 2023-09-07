@@ -1,13 +1,49 @@
+"""
+Instructions of TAC Programs.
+"""
+
 from enum import Enum, auto, unique
-from typing import Any, Optional, Union
+from typing import Optional
 
 from utils.label.label import Label
-from utils.tac.nativeinstr import NativeInstr
-from utils.tac.reg import Reg
+from .nativeinstr import InstrKind, NativeInstr
 
-from .tacop import *
 from .tacvisitor import TACVisitor
-from .temp import Temp
+from .reg import Temp, Reg
+
+
+# Kinds of unary operations.
+@unique
+class UnaryOp(Enum):
+    NEG = auto()
+    NOT = auto()
+    SEQZ = auto()
+    SNEZ = auto()
+
+
+# Kinds of binary operations.
+@unique
+class BinaryOp(Enum):
+    ADD = auto()
+    SUB = auto()
+    MUL = auto()
+    DIV = auto()
+    REM = auto()
+    EQU = auto()
+    NEQ = auto()
+    SLT = auto()
+    LEQ = auto()
+    SGT = auto()
+    GEQ = auto()
+    AND = auto()
+    OR = auto()
+
+
+# Kinds of branching with conditions.
+@unique
+class CondBranchOp(Enum):
+    BEQ = auto()
+    BNE = auto()
 
 
 class TACInstr:

@@ -1,9 +1,27 @@
+"""
+TODO: Move this module out of TAC?
+"""
+
+from enum import Enum, auto, unique
 from typing import Optional
 
 from utils.label.label import Label
 from utils.tac.reg import Reg
 
-from .tacop import InstrKind
+
+# Kinds of instructions.
+@unique
+class InstrKind(Enum):
+    # Labels.
+    LABEL = auto()
+    # Sequential instructions (unary operations, binary operations, etc).
+    SEQ = auto()
+    # Branching instructions.
+    JMP = auto()
+    # Branching with conditions.
+    COND_JMP = auto()
+    # Return instruction.
+    RET = auto()
 
 
 class NativeInstr:

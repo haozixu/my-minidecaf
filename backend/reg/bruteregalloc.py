@@ -8,8 +8,7 @@ from backend.riscv.riscvasmemitter import RiscvAsmEmitter
 from backend.subroutineemitter import SubroutineEmitter
 from backend.subroutineinfo import SubroutineInfo
 from utils.riscv import Riscv
-from utils.tac.reg import Reg
-from utils.tac.temp import Temp
+from utils.tac.reg import Reg, Temp
 
 """
 BruteRegAlloc: one kind of RegAlloc

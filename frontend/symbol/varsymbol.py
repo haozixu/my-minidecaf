@@ -1,4 +1,4 @@
-from utils.tac.temp import Temp
+from utils.tac.reg import Temp
 
 from .symbol import *
 

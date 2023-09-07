@@ -5,7 +5,7 @@ from utils.error import IllegalArgumentException
 from utils.label.label import Label, LabelKind
 from utils.riscv import Riscv
 from utils.tac.reg import Reg
-from utils.tac.tacfunc import TACFunc
+from utils.tac.tacprog import TACFunc
 from utils.tac.tacinstr import *
 from utils.tac.tacvisitor import TACVisitor
 

@@ -6,10 +6,9 @@ from utils.label.funclabel import FuncLabel
 from utils.label.label import Label
 
 from .context import Context
-from .tacfunc import TACFunc
+from .tacprog import TACFunc
 from .tacinstr import *
-from .tacop import *
-from .temp import Temp
+from .reg import Temp
 
 
 class FuncVisitor:

@@ -1,8 +1,21 @@
+"""
+This module contains classes of 'temporary variables', or 'virtual registers'.
+These 'variables'/'registers' serve as operands of TAC instructions/native assembly instructions.
+"""
+
 from typing import Optional
 
-from .temp import Temp
+
+# Temporary variables.
+class Temp:
+    def __init__(self, index: int) -> None:
+        self.index = index
+
+    def __str__(self) -> str:
+        return "_T" + str(self.index)
 
 
+# registers derived from temporary variables
 class Reg(Temp):
     def __init__(self, id: int, name: str) -> None:
         # need to consider

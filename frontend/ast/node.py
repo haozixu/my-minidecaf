@@ -7,8 +7,8 @@ and a helper type `NullType` along with its instance `NULL`.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from enum import Enum, auto, unique
-from typing import Any, Optional, TypeVar, Union
+from enum import Enum, unique
+from typing import Any, Optional, TypeVar
 
 from .visitor import Visitor
 
@@ -180,7 +180,7 @@ class NullType(Node):
         return False
 
     def accept(self, v: Visitor[T, U], ctx: T) -> Optional[U]:
-        return v.visitNULL(self, ctx)
+        return v.visit_null(self, ctx)
 
     def is_leaf(self):
         return True

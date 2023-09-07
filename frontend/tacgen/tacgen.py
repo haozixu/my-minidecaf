@@ -33,24 +33,24 @@ class TACGen(Visitor[FuncVisitor, None]):
         # Remember to call pw.visitEnd before finishing the translation phase.
         return pw.visitEnd()
 
-    def visitBlock(self, block: Block, mv: FuncVisitor) -> None:
+    def visit_block(self, block: Block, mv: FuncVisitor) -> None:
         for child in block:
             child.accept(self, mv)
 
-    def visitReturn(self, stmt: Return, mv: FuncVisitor) -> None:
+    def visit_return(self, stmt: Return, mv: FuncVisitor) -> None:
         stmt.expr.accept(self, mv)
         mv.visitReturn(stmt.expr.getattr("val"))
 
-    def visitBreak(self, stmt: Break, mv: FuncVisitor) -> None:
+    def visit_break(self, stmt: Break, mv: FuncVisitor) -> None:
         mv.visitBranch(mv.getBreakLabel())
 
-    def visitIdentifier(self, ident: Identifier, mv: FuncVisitor) -> None:
+    def visit_identifier(self, ident: Identifier, mv: FuncVisitor) -> None:
         """
         1. Set the 'val' attribute of ident as the temp variable of the 'symbol' attribute of ident.
         """
         pass
 
-    def visitDeclaration(self, decl: Declaration, mv: FuncVisitor) -> None:
+    def visit_declaration(self, decl: Declaration, mv: FuncVisitor) -> None:
         """
         1. Get the 'symbol' attribute of decl.
         2. Use mv.freshTemp to get a new temp variable for this symbol.
@@ -58,7 +58,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         """
         pass
 
-    def visitAssignment(self, expr: Assignment, mv: FuncVisitor) -> None:
+    def visit_assignment(self, expr: Assignment, mv: FuncVisitor) -> None:
         """
         1. Visit the right hand side of expr, and get the temp variable of left hand side.
         2. Use mv.visitAssignment to emit an assignment instruction.
@@ -66,7 +66,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         """
         pass
 
-    def visitIf(self, stmt: If, mv: FuncVisitor) -> None:
+    def visit_if(self, stmt: If, mv: FuncVisitor) -> None:
         stmt.cond.accept(self, mv)
 
         if stmt.otherwise is NULL:
@@ -88,7 +88,7 @@ class TACGen(Visitor[FuncVisitor, None]):
             stmt.otherwise.accept(self, mv)
             mv.visitLabel(exitLabel)
 
-    def visitWhile(self, stmt: While, mv: FuncVisitor) -> None:
+    def visit_while(self, stmt: While, mv: FuncVisitor) -> None:
         beginLabel = mv.freshLabel()
         loopLabel = mv.freshLabel()
         breakLabel = mv.freshLabel()
@@ -104,7 +104,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         mv.visitLabel(breakLabel)
         mv.closeLoop()
 
-    def visitUnary(self, expr: Unary, mv: FuncVisitor) -> None:
+    def visit_unary(self, expr: Unary, mv: FuncVisitor) -> None:
         expr.operand.accept(self, mv)
 
         op = {
@@ -113,7 +113,7 @@ class TACGen(Visitor[FuncVisitor, None]):
         }[expr.op]
         expr.setattr("val", mv.visitUnary(op, expr.operand.getattr("val")))
 
-    def visitBinary(self, expr: Binary, mv: FuncVisitor) -> None:
+    def visit_binary(self, expr: Binary, mv: FuncVisitor) -> None:
         expr.lhs.accept(self, mv)
         expr.rhs.accept(self, mv)
 
@@ -125,11 +125,11 @@ class TACGen(Visitor[FuncVisitor, None]):
             "val", mv.visitBinary(op, expr.lhs.getattr("val"), expr.rhs.getattr("val"))
         )
 
-    def visitCondExpr(self, expr: ConditionExpression, mv: FuncVisitor) -> None:
+    def visit_cond_expr(self, expr: ConditionExpression, mv: FuncVisitor) -> None:
         """
         1. Refer to the implementation of visitIf and visitBinary.
         """
         pass
 
-    def visitIntLiteral(self, expr: IntLiteral, mv: FuncVisitor) -> None:
+    def visit_int_literal(self, expr: IntLiteral, mv: FuncVisitor) -> None:
         expr.setattr("val", mv.visitLoad(expr.value))

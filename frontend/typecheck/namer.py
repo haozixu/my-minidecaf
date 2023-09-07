@@ -32,21 +32,21 @@ class Namer(Visitor[ScopeStack, None]):
         program.accept(self, ctx)
         return program
 
-    def visitProgram(self, program: Program, ctx: ScopeStack) -> None:
+    def visit_program(self, program: Program, ctx: ScopeStack) -> None:
         # Check if the 'main' function is missing
         if not program.hasMainFunc():
             raise DecafNoMainFuncError
 
         program.mainFunc().accept(self, ctx)
 
-    def visitFunction(self, func: Function, ctx: ScopeStack) -> None:
+    def visit_function(self, func: Function, ctx: ScopeStack) -> None:
         func.body.accept(self, ctx)
 
-    def visitBlock(self, block: Block, ctx: ScopeStack) -> None:
+    def visit_block(self, block: Block, ctx: ScopeStack) -> None:
         for child in block:
             child.accept(self, ctx)
 
-    def visitReturn(self, stmt: Return, ctx: ScopeStack) -> None:
+    def visit_return(self, stmt: Return, ctx: ScopeStack) -> None:
         stmt.expr.accept(self, ctx)
 
         """
@@ -59,7 +59,7 @@ class Namer(Visitor[ScopeStack, None]):
         5. Close the loop and the local scope.
         """
 
-    def visitIf(self, stmt: If, ctx: ScopeStack) -> None:
+    def visit_if(self, stmt: If, ctx: ScopeStack) -> None:
         stmt.cond.accept(self, ctx)
         stmt.then.accept(self, ctx)
 
@@ -67,7 +67,7 @@ class Namer(Visitor[ScopeStack, None]):
         if not stmt.otherwise is NULL:
             stmt.otherwise.accept(self, ctx)
 
-    def visitWhile(self, stmt: While, ctx: ScopeStack) -> None:
+    def visit_while(self, stmt: While, ctx: ScopeStack) -> None:
         stmt.cond.accept(self, ctx)
         ctx.openLoop()
         stmt.body.accept(self, ctx)
@@ -82,7 +82,7 @@ class Namer(Visitor[ScopeStack, None]):
         4. Visit the condition of the loop.
         """
 
-    def visitBreak(self, stmt: Break, ctx: ScopeStack) -> None:
+    def visit_break(self, stmt: Break, ctx: ScopeStack) -> None:
         if not ctx.inLoop():
             raise DecafBreakOutsideLoopError()
 
@@ -91,7 +91,7 @@ class Namer(Visitor[ScopeStack, None]):
         1. Refer to the implementation of visitBreak.
         """
 
-    def visitDeclaration(self, decl: Declaration, ctx: ScopeStack) -> None:
+    def visit_declaration(self, decl: Declaration, ctx: ScopeStack) -> None:
         """
         1. Use ctx.findConflict to find if a variable with the same name has been declared.
         2. If not, build a new VarSymbol, and put it into the current scope using ctx.declare.
@@ -100,26 +100,26 @@ class Namer(Visitor[ScopeStack, None]):
         """
         pass
 
-    def visitAssignment(self, expr: Assignment, ctx: ScopeStack) -> None:
+    def visit_assignment(self, expr: Assignment, ctx: ScopeStack) -> None:
         """
         1. Refer to the implementation of visitBinary.
         """
         pass
 
-    def visitUnary(self, expr: Unary, ctx: ScopeStack) -> None:
+    def visit_unary(self, expr: Unary, ctx: ScopeStack) -> None:
         expr.operand.accept(self, ctx)
 
-    def visitBinary(self, expr: Binary, ctx: ScopeStack) -> None:
+    def visit_binary(self, expr: Binary, ctx: ScopeStack) -> None:
         expr.lhs.accept(self, ctx)
         expr.rhs.accept(self, ctx)
 
-    def visitCondExpr(self, expr: ConditionExpression, ctx: ScopeStack) -> None:
+    def visit_cond_expr(self, expr: ConditionExpression, ctx: ScopeStack) -> None:
         """
         1. Refer to the implementation of visitBinary.
         """
         pass
 
-    def visitIdentifier(self, ident: Identifier, ctx: ScopeStack) -> None:
+    def visit_identifier(self, ident: Identifier, ctx: ScopeStack) -> None:
         """
         1. Use ctx.lookup to find the symbol corresponding to ident.
         2. If it has not been declared, raise a DecafUndefinedVarError.
@@ -127,7 +127,7 @@ class Namer(Visitor[ScopeStack, None]):
         """
         pass
 
-    def visitIntLiteral(self, expr: IntLiteral, ctx: ScopeStack) -> None:
+    def visit_int_literal(self, expr: IntLiteral, ctx: ScopeStack) -> None:
         value = expr.value
         if value > MAX_INT:
             raise DecafBadIntValueError(value)

@@ -6,7 +6,7 @@ Modify this file if you want to add a new AST node.
 
 from __future__ import annotations
 
-from typing import Any, Generic, Optional, TypeVar, Union
+from typing import Generic, Optional, TypeVar, Union
 
 from frontend.type import INT, DecafType
 from utils import T, U
@@ -63,7 +63,7 @@ class Program(ListNode["Function"]):
         return self.functions()["main"]
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitProgram(self, ctx)
+        return v.visit_program(self, ctx)
 
 
 class Function(Node):
@@ -93,7 +93,7 @@ class Function(Node):
         return 3
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitFunction(self, ctx)
+        return v.visit_function(self, ctx)
 
 
 class Statement(Node):
@@ -126,7 +126,7 @@ class Return(Statement):
         return 1
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitReturn(self, ctx)
+        return v.visit_return(self, ctx)
 
 
 class If(Statement):
@@ -149,7 +149,7 @@ class If(Statement):
         return 3
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitIf(self, ctx)
+        return v.visit_if(self, ctx)
 
 
 class While(Statement):
@@ -169,7 +169,7 @@ class While(Statement):
         return 2
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitWhile(self, ctx)
+        return v.visit_while(self, ctx)
 
 
 class Break(Statement):
@@ -187,7 +187,7 @@ class Break(Statement):
         return 0
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitBreak(self, ctx)
+        return v.visit_break(self, ctx)
 
     def is_leaf(self):
         return True
@@ -202,7 +202,7 @@ class Block(Statement, ListNode[Union["Statement", "Declaration"]]):
         super().__init__("block", list(children))
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitBlock(self, ctx)
+        return v.visit_block(self, ctx)
 
     def is_block(self) -> bool:
         return True
@@ -231,7 +231,7 @@ class Declaration(Node):
         return 3
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitDeclaration(self, ctx)
+        return v.visit_declaration(self, ctx)
 
 
 class Expression(Node):
@@ -262,7 +262,7 @@ class Unary(Expression):
         return 1
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitUnary(self, ctx)
+        return v.visit_unary(self, ctx)
 
     def __str__(self) -> str:
         return "{}({})".format(
@@ -290,7 +290,7 @@ class Binary(Expression):
         return 2
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitBinary(self, ctx)
+        return v.visit_binary(self, ctx)
 
     def __str__(self) -> str:
         return "({}){}({})".format(
@@ -310,7 +310,7 @@ class Assignment(Binary):
         super().__init__(BinaryOp.Assign, lhs, rhs)
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitAssignment(self, ctx)
+        return v.visit_assignment(self, ctx)
 
 
 class ConditionExpression(Expression):
@@ -335,7 +335,7 @@ class ConditionExpression(Expression):
         return 3
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitCondExpr(self, ctx)
+        return v.visit_cond_expr(self, ctx)
 
     def __str__(self) -> str:
         return "({})?({}):({})".format(
@@ -361,7 +361,7 @@ class Identifier(Expression):
         return 0
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitIdentifier(self, ctx)
+        return v.visit_identifier(self, ctx)
 
     def __str__(self) -> str:
         return f"identifier({self.value})"
@@ -386,7 +386,7 @@ class IntLiteral(Expression):
         return 0
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitIntLiteral(self, ctx)
+        return v.visit_int_literal(self, ctx)
 
     def __str__(self) -> str:
         return f"int({self.value})"
@@ -424,4 +424,4 @@ class TInt(TypeLiteral):
         return 0
 
     def accept(self, v: Visitor[T, U], ctx: T):
-        return v.visitTInt(self, ctx)
+        return v.visit_tint(self, ctx)

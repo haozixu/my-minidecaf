@@ -6,53 +6,53 @@ class TreePrinter:
     r = "]"
     lr = l + r
 
-    def __init__(self, indentLen=4) -> None:
-        self.indentLen = indentLen
-        self.indentNum = 0
+    def __init__(self, indent_len=4) -> None:
+        self.indent_len = indent_len
+        self.indent_num = 0
 
-    def work(self, element) -> None:
+    def print(self, element) -> None:
         if element is None:
-            self.printLine("<None: here is a bug>")
+            self.print_line("<None: here is a bug>")
 
         elif isinstance(element, Node):
             if element.is_leaf():
-                self.printLine(str(element))
+                self.print_line(str(element))
                 return
 
             if len(element) == 0:
-                self.printLine(f"{element.name} {self.lr}")
+                self.print_line(f"{element.name} {self.lr}")
                 return
 
-            self.printLine(f"{element.name} {self.l}")
-            self.incIndent()
+            self.print_line(f"{element.name} {self.l}")
+            self.inc_indent()
             for it in element:
-                self.work(it)
-            self.decIndent()
-            self.printLine(self.r)
+                self.print(it)
+            self.dec_indent()
+            self.print_line(self.r)
 
         elif isinstance(element, list):
-            self.printLine("List")
-            self.incIndent()
+            self.print_line("List")
+            self.inc_indent()
             if len(element) == 0:
-                self.printLine("<empty>")
+                self.print_line("<empty>")
             else:
                 for it in element:
-                    self.work(it)
-            self.decIndent()
+                    self.print(it)
+            self.dec_indent()
 
         else:
-            self.printLine(str(element))
+            self.print_line(str(element))
 
-    def outputIndent(self) -> None:
-        if self.indentNum > 0:
-            print(" " * self.indentLen * self.indentNum, end="")
+    def output_indent(self) -> None:
+        if self.indent_num > 0:
+            print(" " * self.indent_len * self.indent_num, end="")
 
-    def printLine(self, s: str) -> None:
-        self.outputIndent()
+    def print_line(self, s: str) -> None:
+        self.output_indent()
         print(s)
 
-    def incIndent(self) -> None:
-        self.indentNum += 1
+    def inc_indent(self) -> None:
+        self.indent_num += 1
 
-    def decIndent(self) -> None:
-        self.indentNum -= 1
+    def dec_indent(self) -> None:
+        self.indent_num -= 1

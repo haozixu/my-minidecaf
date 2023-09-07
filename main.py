@@ -72,7 +72,7 @@ def main():
         r = step_parse(args)
         # print("\nParsed AST:\n")
         # printer = TreePrinter(indentLen=2)
-        # printer.work(r)
+        # printer.print(r)
         return r
 
     def _tac():
@@ -95,8 +95,8 @@ def main():
         prog.printTo()
     elif args.parse:
         prog = _parse()
-        printer = TreePrinter(indentLen=2)
-        printer.work(prog)
+        printer = TreePrinter(indent_len=2)
+        printer.print(prog)
 
     return
 

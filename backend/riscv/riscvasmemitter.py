@@ -105,7 +105,7 @@ class RiscvSubroutineEmitter(SubroutineEmitter):
         # record where a temp is stored in the stack
         self.offsets = {}
 
-        self.printer.printLabel(info.funcLabel)
+        self.printer.print_label(info.funcLabel)
 
         # in step9, step11 you can compute the offset of local array and parameters here
 
@@ -145,46 +145,46 @@ class RiscvSubroutineEmitter(SubroutineEmitter):
 
     
     def emitEnd(self):
-        self.printer.printComment("start of prologue")
-        self.printer.printInstr(Riscv.SPAdd(-self.nextLocalOffset))
+        self.printer.print_comment("start of prologue")
+        self.printer.print_instr(Riscv.SPAdd(-self.nextLocalOffset))
 
         # in step9, you need to think about how to store RA here
         # you can get some ideas from how to save CalleeSaved regs
         for i in range(len(Riscv.CalleeSaved)):
             if Riscv.CalleeSaved[i].isUsed():
-                self.printer.printInstr(
+                self.printer.print_instr(
                     Riscv.NativeStoreWord(Riscv.CalleeSaved[i], Riscv.SP, 4 * i)
                 )
 
-        self.printer.printComment("end of prologue")
+        self.printer.print_comment("end of prologue")
         self.printer.println("")
 
-        self.printer.printComment("start of body")
+        self.printer.print_comment("start of body")
 
         # in step9, you need to think about how to pass the parameters here
         # you can use the stack or regs
 
         # using asmcodeprinter to output the RiscV code
         for instr in self.buf:
-            self.printer.printInstr(instr)
+            self.printer.print_instr(instr)
 
-        self.printer.printComment("end of body")
+        self.printer.print_comment("end of body")
         self.printer.println("")
 
-        self.printer.printLabel(
+        self.printer.print_label(
             Label(LabelKind.TEMP, self.info.funcLabel.name + Riscv.EPILOGUE_SUFFIX)
         )
-        self.printer.printComment("start of epilogue")
+        self.printer.print_comment("start of epilogue")
 
         for i in range(len(Riscv.CalleeSaved)):
             if Riscv.CalleeSaved[i].isUsed():
-                self.printer.printInstr(
+                self.printer.print_instr(
                     Riscv.NativeLoadWord(Riscv.CalleeSaved[i], Riscv.SP, 4 * i)
                 )
 
-        self.printer.printInstr(Riscv.SPAdd(self.nextLocalOffset))
-        self.printer.printComment("end of epilogue")
+        self.printer.print_instr(Riscv.SPAdd(self.nextLocalOffset))
+        self.printer.print_comment("end of epilogue")
         self.printer.println("")
 
-        self.printer.printInstr(Riscv.NativeReturn())
+        self.printer.print_instr(Riscv.NativeReturn())
         self.printer.println("")

@@ -1,6 +1,5 @@
 from utils.label.label import Label
 from utils.tac.nativeinstr import NativeInstr
-from utils.tac.tacinstr import TACInstr
 
 
 class AsmCodePrinter:
@@ -16,17 +15,17 @@ class AsmCodePrinter:
     def println(self, fmt: str, **args):
         self.buffer += self.INDENTS + fmt.format(**args) + "\n"
 
-    def printLabel(self, label: Label):
+    def print_label(self, label: Label):
         self.buffer += str(label.name) + ":\n"
 
-    def printInstr(self, instr: NativeInstr):
+    def print_instr(self, instr: NativeInstr):
         if instr.isLabel():
             self.buffer += str(instr.label) + ":"
         else:
             self.buffer += self.INDENTS + str(instr)
         self.buffer += "\n"
 
-    def printComment(self, comment: str):
+    def print_comment(self, comment: str):
         self.buffer += self.INDENTS + self.COMMENT_PROMPT + " " + comment + "\n"
 
     def close(self) -> str:

@@ -2,7 +2,6 @@ from typing import Final, Optional
 
 from utils.label.funclabel import FuncLabel
 from utils.label.label import Label, LabelKind
-from utils.tac.holeinstr import HoleInstr
 from utils.tac.nativeinstr import NativeInstr
 from utils.tac.reg import Reg
 from utils.tac.tacinstr import TACInstr

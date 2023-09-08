@@ -146,7 +146,7 @@ class Binary(TACInstr):
         self.rhs = rhs
 
     def __str__(self) -> str:
-        opStr = {
+        op_str = {
             BinaryOp.ADD: "+",
             BinaryOp.SUB: "-",
             BinaryOp.MUL: "*",
@@ -161,7 +161,7 @@ class Binary(TACInstr):
             BinaryOp.AND: "&&",
             BinaryOp.OR: "||",
         }[self.op]
-        return "%s = (%s %s %s)" % (self.dst, self.lhs, opStr, self.rhs)
+        return "%s = (%s %s %s)" % (self.dst, self.lhs, op_str, self.rhs)
 
     def accept(self, v: TACVisitor) -> None:
         v.visitBinary(self)

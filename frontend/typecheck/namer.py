@@ -34,12 +34,14 @@ class Namer(Visitor[ScopeStack, None]):
 
     def visit_program(self, program: Program, ctx: ScopeStack) -> None:
         # Check if the 'main' function is missing
-        if not program.hasMainFunc():
+        functions = program.functions()
+        if "main" not in functions:
             raise DecafNoMainFuncError
 
-        program.mainFunc().accept(self, ctx)
+        functions["main"].accept(self, ctx)
 
     def visit_function(self, func: Function, ctx: ScopeStack) -> None:
+        # TODO
         func.body.accept(self, ctx)
 
     def visit_block(self, block: Block, ctx: ScopeStack) -> None:

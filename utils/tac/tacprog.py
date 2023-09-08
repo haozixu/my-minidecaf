@@ -17,7 +17,24 @@ from .tacinstr import TACInstr
 
 # TODO
 class TACBlock:
-    pass
+    def __init__(self, label: str) -> None:
+        self.label = label
+        self.instrs = []
+
+    def __iter__(self):
+        return iter(self.instrs)
+
+    def empty(self) -> bool:
+        return len(self.instrs) == 0
+
+    def add(self, instr: TACInstr) -> None:
+        self.instrs.append(instr)
+
+    def last_instr(self) -> TACInstr:
+        return self.instrs[-1]
+    
+    def terminator(self) -> TACInstr | None:
+        return self.instrs[-1] if not self.empty() else None
 
 
 # TODO: TACFunc -> multiple TACBlocks

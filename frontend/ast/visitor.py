@@ -57,7 +57,7 @@ class Visitor(Protocol[T, U]):  # type: ignore
 
     def visit_assignment(self, that: Assignment, ctx: T) -> Optional[U]:
         """
-        ## ! Note that the default behavior is `visitBinary`, not `visitOther`
+        ## ! Note that the default behavior is `visit_binary`, not `visit_other`
         """
         return self.visit_binary(that, ctx)
 

@@ -56,12 +56,6 @@ class Program(ListNode["Function"]):
     def functions(self) -> dict[str, Function]:
         return {func.ident.value: func for func in self if isinstance(func, Function)}
 
-    def hasMainFunc(self) -> bool:
-        return "main" in self.functions()
-
-    def mainFunc(self) -> Function:
-        return self.functions()["main"]
-
     def accept(self, v: Visitor[T, U], ctx: T):
         return v.visit_program(self, ctx)
 

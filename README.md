@@ -23,7 +23,7 @@ python3 main.py --input <testcase.c> [--riscv/--tac/--parse]
 
 ## 代码结构
 
-```
+<!-- ```
 minidecaf/
     frontend/       前端（与中端）
         ast/        语法树定义
@@ -41,4 +41,4 @@ minidecaf/
     utils/          底层类
         label/      标签定义
         tac/        TAC 定义和基本类
-```
+``` -->

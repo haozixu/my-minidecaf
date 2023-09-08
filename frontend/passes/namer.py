@@ -1,3 +1,8 @@
+"""
+The namer phase: resolve all symbols defined in the abstract syntax tree and store them in symbol tables (i.e. scopes).
+"""
+
+
 from typing import Protocol, TypeVar, cast
 
 from frontend.ast.node import Node, NullType
@@ -13,10 +18,6 @@ from frontend.type.array import ArrayType
 from frontend.type.type import DecafType
 from utils.error import *
 from utils.riscv import MAX_INT
-
-"""
-The namer phase: resolve all symbols defined in the abstract syntax tree and store them in symbol tables (i.e. scopes).
-"""
 
 
 class Namer(Visitor[ScopeStack, None]):

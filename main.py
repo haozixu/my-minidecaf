@@ -7,15 +7,15 @@ from backend.riscv.riscvasmemitter import RiscvAsmEmitter
 from frontend.ast.tree import Program
 from frontend.lexer import lexer
 from frontend.parser import parser
-from frontend.tacgen.tacgen import TACGen
-from frontend.typecheck.namer import Namer
-from frontend.typecheck.typer import Typer
+from frontend.passes.tacgen import TACGen
+from frontend.passes.namer import Namer
+from frontend.passes.typer import Typer
 from utils.printtree import TreePrinter
 from utils.riscv import Riscv
 from utils.tac.tacprog import TACProg
 
 
-def parseArgs():
+def parse_args():
     parser = argparse.ArgumentParser(description="MiniDecaf compiler")
     parser.add_argument("--input", type=str, help="the input C file")
     parser.add_argument("--parse", action="store_true", help="output parsed AST")
@@ -24,14 +24,14 @@ def parseArgs():
     return parser.parse_args()
 
 
-def readCode(fileName):
+def read_code(fileName):
     with open(fileName, "r") as f:
         return f.read()
 
 
 # The parser stage: MiniDecaf code -> Abstract syntax tree
 def step_parse(args: argparse.Namespace):
-    code = readCode(args.input)
+    code = read_code(args.input)
     r: Program = parser.parse(code, lexer=lexer)
 
     errors = parser.error_stack
@@ -62,11 +62,13 @@ def step_asm(p: TACProg):
     prog = asm.transform(p)
     return prog
 
+
 # hope all of you happiness
 # enjoy potato chips
 
+
 def main():
-    args = parseArgs()
+    args = parse_args()
 
     def _parse():
         r = step_parse(args)

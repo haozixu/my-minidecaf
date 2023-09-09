@@ -240,9 +240,11 @@ class TACGen(Visitor[TACFuncEmitter, None]):
 
         op = {
             node.UnaryOp.Neg: tacinstr.UnaryOp.NEG,
+            node.UnaryOp.BitNot: tacinstr.UnaryOp.NOT,
+            node.UnaryOp.LogicNot: tacinstr.UnaryOp.SEQZ,
             # You can add unary operations here.
         }[expr.op]
-        expr.setattr("val", mv.visit_unary(op, expr.operand.getattr("val")))
+        expr.setattr("val", mv.emit_unary(op, expr.operand.getattr("val")))
 
     def visit_binary(self, expr: Binary, mv: TACFuncEmitter) -> None:
         expr.lhs.accept(self, mv)
@@ -253,7 +255,7 @@ class TACGen(Visitor[TACFuncEmitter, None]):
             # You can add binary operations here.
         }[expr.op]
         expr.setattr(
-            "val", mv.visit_binary(op, expr.lhs.getattr("val"), expr.rhs.getattr("val"))
+            "val", mv.emit_binary(op, expr.lhs.getattr("val"), expr.rhs.getattr("val"))
         )
 
     def visit_cond_expr(self, expr: ConditionExpression, mv: TACFuncEmitter) -> None:

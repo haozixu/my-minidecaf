@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from .builtin_type import INT
 from .type import DecafType
 
 """

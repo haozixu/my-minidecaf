@@ -60,29 +60,29 @@ class RiscvAsmEmitter(AsmEmitter):
             self.seq = []
 
         # in step11, you need to think about how to deal with globalTemp in almost all the visit functions. 
-        def visitReturn(self, instr: Return) -> None:
+        def visit_return(self, instr: Return) -> None:
             if instr.value is not None:
                 self.seq.append(Riscv.Move(Riscv.A0, instr.value))
             else:
                 self.seq.append(Riscv.LoadImm(Riscv.A0, 0))
             self.seq.append(Riscv.JumpToEpilogue(self.entry))
 
-        def visitMark(self, instr: Mark) -> None:
+        def visit_mark(self, instr: Mark) -> None:
             self.seq.append(Riscv.RiscvLabel(instr.label))
 
-        def visitLoadImm4(self, instr: LoadImm4) -> None:
+        def visit_load_imm4(self, instr: LoadImm4) -> None:
             self.seq.append(Riscv.LoadImm(instr.dst, instr.value))
 
-        def visitUnary(self, instr: Unary) -> None:
+        def visit_unary(self, instr: Unary) -> None:
             self.seq.append(Riscv.Unary(instr.op, instr.dst, instr.operand))
  
-        def visitBinary(self, instr: Binary) -> None:
+        def visit_binary(self, instr: Binary) -> None:
             self.seq.append(Riscv.Binary(instr.op, instr.dst, instr.lhs, instr.rhs))
 
-        def visitCondBranch(self, instr: CondBranch) -> None:
+        def visit_cond_branch(self, instr: CondBranch) -> None:
             self.seq.append(Riscv.Branch(instr.cond, instr.label))
         
-        def visitBranch(self, instr: Branch) -> None:
+        def visit_branch(self, instr: Branch) -> None:
             self.seq.append(Riscv.Jump(instr.target))
 
         # in step9, you need to think about how to pass the parameters and how to store and restore callerSave regs

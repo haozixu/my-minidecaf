@@ -1,4 +1,4 @@
-import utils.riscv as riscv
+import utils.config as config
 
 from .type import DecafType
 
@@ -14,7 +14,7 @@ class BuiltinType(DecafType):
 
     @property
     def size(self) -> int:
-        return riscv.WORD_SIZE
+        return config.INT_SIZE
 
     def __eq__(self, o: object) -> bool:
         if isinstance(o, BuiltinType) and self.name == o.name:

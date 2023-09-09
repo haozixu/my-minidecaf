@@ -18,7 +18,6 @@ class UnaryOp(Enum):
     NEG = auto()
     NOT = auto()
     SEQZ = auto()
-    SNEZ = auto()
 
 
 # Kinds of binary operations.
@@ -100,7 +99,7 @@ class Assign(TACInstr):
         return "%s = %s" % (self.dst, self.src)
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitAssign(self)
+        v.visit_assign(self)
 
 
 # Loading an immediate 32-bit constant.
@@ -114,7 +113,7 @@ class LoadImm4(TACInstr):
         return "%s = %d" % (self.dst, self.value)
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitLoadImm4(self)
+        v.visit_load_imm4(self)
 
 
 # Unary operations.
@@ -133,7 +132,7 @@ class Unary(TACInstr):
         )
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitUnary(self)
+        v.visit_unary(self)
 
 
 # Binary Operations.
@@ -164,7 +163,7 @@ class Binary(TACInstr):
         return "%s = (%s %s %s)" % (self.dst, self.lhs, op_str, self.rhs)
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitBinary(self)
+        v.visit_binary(self)
 
 
 # Branching instruction.
@@ -177,7 +176,7 @@ class Branch(TACInstr):
         return "branch %s" % str(self.target)
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitBranch(self)
+        v.visit_branch(self)
 
 
 # Branching with conditions.
@@ -196,7 +195,7 @@ class CondBranch(TACInstr):
         )
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitCondBranch(self)
+        v.visit_cond_branch(self)
 
 
 # Return instruction.
@@ -212,7 +211,7 @@ class Return(TACInstr):
         return "return" if (self.value is None) else ("return " + str(self.value))
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitReturn(self)
+        v.visit_return(self)
 
 
 # Annotation (used for debugging).
@@ -225,7 +224,7 @@ class Memo(TACInstr):
         return "memo '%s'" % self.msg
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitMemo(self)
+        v.visit_memo(self)
 
 
 # Label (function entry or branching target).
@@ -237,4 +236,4 @@ class Mark(TACInstr):
         return "%s:" % str(self.label)
 
     def accept(self, v: TACVisitor) -> None:
-        v.visitMark(self)
+        v.visit_mark(self)

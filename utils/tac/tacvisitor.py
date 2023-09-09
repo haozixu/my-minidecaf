@@ -4,32 +4,32 @@ from .tacinstr import *
 
 
 class TACVisitor:
-   def visitOther(self, instr: TACInstr) -> None:
+   def visit_other(self, instr: TACInstr) -> None:
         pass
 
-   def visitAssign(self, instr: Assign) -> None:
-        self.visitOther(instr)
+   def visit_assign(self, instr: Assign) -> None:
+        self.visit_other(instr)
 
-   def visitLoadImm4(self, instr: LoadImm4) -> None:
-        self.visitOther(instr)
+   def visit_load_imm4(self, instr: LoadImm4) -> None:
+        self.visit_other(instr)
 
-   def visitUnary(self, instr: Unary) -> None:
-        self.visitOther(instr)
+   def visit_unary(self, instr: Unary) -> None:
+        self.visit_other(instr)
 
-   def visitBinary(self, instr: Binary) -> None:
-        self.visitOther(instr)
+   def visit_binary(self, instr: Binary) -> None:
+        self.visit_other(instr)
 
-   def visitBranch(self, instr: Branch) -> None:
-        self.visitOther(instr)
+   def visit_branch(self, instr: Branch) -> None:
+        self.visit_other(instr)
 
-   def visitCondBranch(self, instr: CondBranch) -> None:
-        self.visitOther(instr)
+   def visit_cond_branch(self, instr: CondBranch) -> None:
+        self.visit_other(instr)
 
-   def visitReturn(self, instr: Return) -> None:
-        self.visitOther(instr)
+   def visit_return(self, instr: Return) -> None:
+        self.visit_other(instr)
 
-   def visitMemo(self, instr: Memo) -> None:
-        self.visitOther(instr)
+   def visit_memo(self, instr: Memo) -> None:
+        self.visit_other(instr)
 
-   def visitMark(self, instr: Mark) -> None:
-        self.visitOther(instr)
+   def visit_mark(self, instr: Mark) -> None:
+        self.visit_other(instr)

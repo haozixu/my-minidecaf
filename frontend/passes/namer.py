@@ -17,7 +17,7 @@ from frontend.symbol.varsymbol import VarSymbol
 from frontend.type.array import ArrayType
 from frontend.type.type import DecafType
 from utils.error import *
-from utils.riscv import MAX_INT
+from utils.config import MAX_INT
 
 
 class Namer(Visitor[ScopeStack, None]):

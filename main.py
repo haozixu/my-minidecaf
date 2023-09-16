@@ -1,9 +1,9 @@
 import argparse
 import sys
 
-from backend.asm import Asm
-from backend.reg.bruteregalloc import BruteRegAlloc
-from backend.riscv.riscvasmemitter import RiscvAsmEmitter
+from backend.riscv.entry import backend_passes, ProgramTranslator
+from backend.riscv.misc import AsmCodePrinter
+
 from frontend.ast.tree import Program
 from frontend.lexer import lexer
 from frontend.parser import parser
@@ -11,8 +11,7 @@ from frontend.passes.tacgen import TACGen
 from frontend.passes.namer import Namer
 from frontend.passes.typer import Typer
 from utils.printtree import TreePrinter
-from utils.riscv import Riscv
-from utils.tac.tacprog import TACProg
+from utils.tac.program import TACProg
 
 
 def parse_args():
@@ -57,9 +56,11 @@ def step_tac(p: Program):
 
 # Target code generation stage: Three-address code -> RISC-V assembly code
 def step_asm(p: TACProg):
-    riscvAsmEmitter = RiscvAsmEmitter(Riscv.AllocatableRegs, Riscv.CallerSaved)
-    asm = Asm(riscvAsmEmitter, BruteRegAlloc(riscvAsmEmitter))
-    prog = asm.transform(p)
+    translator = ProgramTranslator()
+    prog = translator(p)
+
+    for transform in backend_passes:
+        prog = transform(prog)
     return prog
 
 
@@ -91,16 +92,17 @@ def main():
 
     if args.riscv:
         prog = _asm()
-        print(prog)
+        printer = AsmCodePrinter()
+        printer.print(prog)
     elif args.tac:
         prog = _tac()
-        prog.printTo()
+        prog.print()
     elif args.parse:
         prog = _parse()
         printer = TreePrinter(indent_len=2)
         printer.print(prog)
-
-    return
+    else:
+        print("No action.")
 
 
 if __name__ == "__main__":

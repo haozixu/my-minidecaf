@@ -12,11 +12,9 @@ from frontend.ast.tree import *
 from frontend.ast.visitor import Visitor
 from frontend.symbol.varsymbol import VarSymbol
 from frontend.type.array import ArrayType
-from utils.tac import tacinstr
-from utils.tac.tacprog import TACProg, TACFunc, TACBlock
-from utils.tac.reg import Temp
-from utils.label.funclabel import FuncLabel
-from utils.label.blocklabel import BlockLabel
+from utils.tac import instructions as tacinstr
+from utils.tac.program import TACProg, TACFunc, TACBlock
+from utils.tac.temp import Temp
 
 
 # A global label manager (just a counter)
@@ -32,6 +30,7 @@ class LabelManager:
 # Translates a minidecaf function into low-level TAC function
 # NOTE: this class was previously called `FuncVisitor`
 class TACFuncEmitter:
+    # TODO: function parameter information
     def __init__(self, label_man: LabelManager) -> None:
         # label & code block management
         self.label_man = label_man
@@ -92,7 +91,7 @@ class TACFuncEmitter:
 
     def emit_load_imm(self, value: int) -> Temp:
         dst = self.new_temp()
-        self.emit(tacinstr.LoadImm4(dst, value))
+        self.emit(tacinstr.LoadImm32(dst, value))
         return dst
 
     def emit_unary(self, op: tacinstr.UnaryOp, src: Temp) -> Temp:
@@ -111,19 +110,11 @@ class TACFuncEmitter:
     def emit_inplace_binary(self, op: tacinstr.UnaryOp, dst: Temp, src: Temp) -> None:
         self.emit(tacinstr.Binary(op, dst, dst, src))
 
-    def emit_branch(self, target: str) -> None:
-        self.emit(tacinstr.Branch(BlockLabel(target)))
-
-    def emit_cond_branch(
-        self, op: tacinstr.CondBranchOp, cond: Temp, target: str
-    ) -> None:
-        self.emit(tacinstr.CondBranch(op, cond, BlockLabel(target)))
-
     def emit_return(self, value: Temp | None) -> None:
         self.emit(tacinstr.Return(value))
 
     # Finish code generation and return TAC function
-    def finish(self, func_name: str) -> TACFunc:
+    def finish(self, func_name: str, num_params: int) -> TACFunc:
         last_block = self.cur_block
         if last_block is not None:
             terminator = last_block.terminator()
@@ -131,15 +122,7 @@ class TACFuncEmitter:
                 last_block.add(tacinstr.Return())
             self.code_blocks.append(last_block)
 
-        # NOTE: compatibility code here
-        # TODO: remove
-        tac_fn = TACFunc(FuncLabel(func_name), -1)
-        tac_fn.tempUsed = self.num_temp_vars
-        for block in self.code_blocks:
-            tac_fn.add(tacinstr.Mark(BlockLabel(block.label)))
-            for instr in block:
-                tac_fn.add(instr)
-        return tac_fn
+        return TACFunc(func_name, num_params, self.code_blocks)
 
 
 class TACGen(Visitor[TACFuncEmitter, None]):
@@ -155,7 +138,7 @@ class TACGen(Visitor[TACFuncEmitter, None]):
         for func_name, function in program.functions().items():
             emitter = TACFuncEmitter(self.label_man)
             function.body.accept(self, emitter)
-            tac_funcs.append(emitter.finish(func_name))
+            tac_funcs.append(emitter.finish(func_name, 0))
         return TACProg(tac_funcs)
 
     def visit_block(self, block: Block, mv: TACFuncEmitter) -> None:
@@ -252,6 +235,16 @@ class TACGen(Visitor[TACFuncEmitter, None]):
 
         op = {
             node.BinaryOp.Add: tacinstr.BinaryOp.ADD,
+            node.BinaryOp.Sub: tacinstr.BinaryOp.SUB,
+            node.BinaryOp.Mul: tacinstr.BinaryOp.MUL,
+            node.BinaryOp.Div: tacinstr.BinaryOp.DIV,
+            node.BinaryOp.Mod: tacinstr.BinaryOp.REM,
+            node.BinaryOp.EQ: tacinstr.BinaryOp.EQU,
+            node.BinaryOp.NE: tacinstr.BinaryOp.NEQ,
+            node.BinaryOp.LT: tacinstr.BinaryOp.SLT,
+            node.BinaryOp.LE: tacinstr.BinaryOp.LEQ,
+            node.BinaryOp.GT: tacinstr.BinaryOp.SGT,
+            node.BinaryOp.GE: tacinstr.BinaryOp.GEQ,
             # You can add binary operations here.
         }[expr.op]
         expr.setattr(
